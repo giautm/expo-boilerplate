@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "@exponent/babel-preset-node": "0.1.0",
+    "appr": "1.0.1",
     "babel-plugin-transform-react-jsx-source": "6.22.0",
     "jest-expo": "^0.4.0",
     "react-native-scripts": "0.0.28",
@@ -11,6 +12,7 @@
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
+    "appr": "appr",
     "start": "react-native-scripts start",
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
