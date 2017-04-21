@@ -2,11 +2,21 @@ import { StackNavigator } from 'react-navigation';
 
 import HomeScreen from '../screens/HomeScreen';
 
-const SimpleApp = StackNavigator({
+const AppNavigation = StackNavigator({
   Home: {
     screen: HomeScreen,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#fff',
+      }
+    }
+  },
+}, {
+  headerMode: 'screen',
+  cardStyle: {
+    backgroundColor: '#fff',
   },
 });
 
 
-export default SimpleApp;
+export default AppNavigation;

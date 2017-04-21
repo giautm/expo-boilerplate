@@ -15,22 +15,12 @@ import AppStore from 'AppStore';
 import ApolloClient from '../Api/ApolloClient';
 import ExpoApp from 'ExpoApp';
 
-class WrapWithStore extends React.Component {
-  render() {
-    return (
-      <ApolloProvider client={ApolloClient} store={AppStore}>
-        {this.props.children}
-      </ApolloProvider>
-    );
-  }
-}
-
 export default class App extends React.Component {
   render() {
     return (
-      <WrapWithStore>
+      <ApolloProvider client={ApolloClient} store={AppStore}>
         <ExpoApp {...this.props} />
-      </WrapWithStore>
+      </ApolloProvider>
     );
   }
 }

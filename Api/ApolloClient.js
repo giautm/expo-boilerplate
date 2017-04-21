@@ -8,7 +8,7 @@ import AuthTokenActions from '../Flux/AuthTokenActions';
 const GRAPHQL_ENDPOINT = 'https://exp.host/--/graphql';
 
 function getIdToken() {
-  let Store = require('../Flux/ExStore').default;
+  let Store = require('../Flux/Store').default;
   let state = Store.getState();
   if (state.authTokens) {
     return state.authTokens.idToken;
@@ -18,7 +18,7 @@ function getIdToken() {
 }
 
 function getRefreshToken() {
-  let Store = require('../Flux/ExStore').default;
+  let Store = require('../Flux/Store').default;
   let state = Store.getState();
   if (state.authTokens) {
     return state.authTokens.refreshToken;
@@ -28,7 +28,7 @@ function getRefreshToken() {
 }
 
 function setIdToken(idToken) {
-  let Store = require('../Flux/ExStore').default;
+  let Store = require('../Flux/Store').default;
   Store.dispatch(AuthTokenActions.updateIdToken(idToken));
 }
 
