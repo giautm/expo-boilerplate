@@ -2,9 +2,10 @@
  * @providesModule AppStore
  */
 'use strict';
+import { reducer as formReducer } from 'redux-form/immutable';
 
-import AuthTokenReducer from 'AuthTokenReducer';
 import Flux from 'Flux';
+import AuthTokenReducer from 'AuthTokenReducer';
 import ApolloClient from '../Api/ApolloClient';
 import AppNavigator from '../App/navigation';
 
@@ -13,12 +14,11 @@ const navReducer = (state, action) => {
   return (newState ? newState : state)
 };
 
-const reducers = {
+const store = Flux.createStore({
   authTokens: AuthTokenReducer,
   apollo: ApolloClient.reducer(),
+  form: formReducer,
   nav: navReducer,
-};
-
-const store = Flux.createStore(reducers);
+});
 
 export default store;

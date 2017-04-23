@@ -1,0 +1,78 @@
+Arguments: 
+  /usr/local/Cellar/node/7.9.0/bin/node /usr/local/bin/yarn
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/admin/.composer/vendor/bin:/Users/admin/Library/Android/sdk/tools:/Users/admin/Library/Android/sdk/platform-tools:/Users/admin
+
+Yarn version: 
+  0.23.2
+
+Node version: 
+  7.9.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "expo-boilerplate",
+    "version": "0.1.0",
+    "private": true,
+    "devDependencies": {
+      "@exponent/babel-preset-node": "0.1.0",
+      "appr": "1.0.1",
+      "babel-plugin-transform-react-jsx-source": "6.22.0",
+      "jest-expo": "^0.4.0",
+      "react-devtools": "2.0.12",
+      "react-native-scripts": "0.0.28",
+      "react-test-renderer": "16.0.0-alpha.6"
+    },
+    "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+    "scripts": {
+      "appr": "appr",
+      "devtools": "react-devtools",
+      "start": "react-native-scripts start",
+      "eject": "react-native-scripts eject",
+      "android": "react-native-scripts android",
+      "ios": "react-native-scripts ios",
+      "test": "node node_modules/jest/bin/jest.js --watch"
+    },
+    "jest": {
+      "preset": "jest-expo"
+    },
+    "dependencies": {
+      "@expo/react-native-action-sheet": "0.3.1",
+      "@expo/sentry-utils": "0.4.0",
+      "@expo/vector-icons": "4.0.0",
+      "apollo-client": "1.0.4",
+      "expo": "^16.0.0",
+      "fbemitter": "2.1.1",
+      "graphql-tag": "2.0.0",
+      "immutable": "3.8.1",
+      "jwt-decode": "2.2.0",
+      "lodash": "4.17.4",
+      "mirror-creator": "1.1.0",
+      "moment": "2.18.1",
+      "prop-types": "15.5.8",
+      "react": "16.0.0-alpha.6",
+      "react-apollo": "1.1.0",
+      "react-native": "^0.43.4",
+      "react-native-clean-form": "https://github.com/giautm/react-native-clean-form.git",
+      "react-navigation": "1.0.0-beta.8",
+      "react-redux": "5.0.4",
+      "redux": "3.6.0",
+      "redux-actions": "2.0.2",
+      "redux-form": "https://github.com/giautm/redux-form.git",
+      "redux-promise": "0.5.3"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@exponent/ngrok/-/ngrok-2.2.7.tgz: unexpected end of file
+      at Zlib._handle.onerror (zlib.js:355:17)

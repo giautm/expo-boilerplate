@@ -7,45 +7,9 @@ import { AsyncStorage } from 'react-native';
 import { LegacyAsyncStorage } from 'expo';
 import mapValues from 'lodash/mapValues';
 
-const Keys = mapValues(
-  {
-    AuthTokens: 'authTokens',
-    History: 'history',
-    Settings: 'settings',
-    NuxIsFinished: 'nuxIsFinishedApr-17-2017',
-  },
-  value => `Exponent.${value}`
-);
-
-function maybeMigrateFromLegacyAsync() {
-  return LegacyAsyncStorage.migrateItems(Object.values(Keys));
-}
-
-async function getIsNuxFinishedAsync() {
-  let result = await AsyncStorage.getItem(Keys.NuxIsFinished);
-  return result;
-}
-
-async function getSettingsAsync() {
-  let results = await AsyncStorage.getItem(Keys.Settings);
-  let settings;
-
-  try {
-    let settings = JSON.parse(results);
-  } catch (e) {}
-
-  return settings || {};
-}
-
-async function updateSettingsAsync(updatedSettings) {
-  let currentSettings = await getSettingsAsync();
-  let newSettings = {
-    ...currentSettings,
-    ...updatedSettings,
-  };
-
-  return AsyncStorage.setItem(Keys.Settings, JSON.stringify(newSettings));
-}
+const Keys = mapValues({
+  AuthTokens: 'authTokens',
+}, (value) => `Expo.${value}`);
 
 async function getAuthTokensAsync() {
   let results = await AsyncStorage.getItem(Keys.AuthTokens);
@@ -60,30 +24,6 @@ async function getAuthTokensAsync() {
 
 async function saveAuthTokensAsync(authTokens) {
   return AsyncStorage.setItem(Keys.AuthTokens, JSON.stringify(authTokens));
-}
-
-async function getHistoryAsync() {
-  let jsonHistory = await AsyncStorage.getItem(Keys.History);
-  if (jsonHistory) {
-    try {
-      return JSON.parse(jsonHistory);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  return [];
-}
-
-async function saveHistoryAsync(history) {
-  return AsyncStorage.setItem(Keys.History, JSON.stringify(history));
-}
-
-async function clearHistoryAsync() {
-  return AsyncStorage.removeItem(Keys.History);
-}
-
-async function saveIsNuxFinishedAsync(isFinished) {
-  return AsyncStorage.setItem(Keys.NuxIsFinished, JSON.stringify(isFinished));
 }
 
 async function updateIdTokenAsync(idToken) {
@@ -106,17 +46,9 @@ async function clearAllAsync() {
 }
 
 export default {
-  clearHistoryAsync,
   clearAllAsync,
   getAuthTokensAsync,
-  getIsNuxFinishedAsync,
-  getHistoryAsync,
-  getSettingsAsync,
   saveAuthTokensAsync,
-  saveHistoryAsync,
-  saveIsNuxFinishedAsync,
   removeAuthTokensAsync,
   updateIdTokenAsync,
-  updateSettingsAsync,
-  maybeMigrateFromLegacyAsync,
 };

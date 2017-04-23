@@ -1,12 +1,20 @@
 import React from 'react';
-import { Text } from 'react-native';
+import {
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 
 export default class AllContactsScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Welcome',
-  };
+  _handlePress = () => {
+    this.props.navigation.navigate('SignIn');
+  }
 
   render() {
-    return <Text>Hello, Navigation!</Text>
+    return (
+      <TouchableOpacity
+        onPress={this._handlePress}>
+        <Text>Hello, Navigation!</Text>
+      </TouchableOpacity>
+    );
   }
 }

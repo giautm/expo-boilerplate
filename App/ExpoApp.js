@@ -11,18 +11,35 @@ import {
   StatusBar,
   StyleSheet,
 } from 'react-native';
-import { Asset, Font } from 'expo';
+import {
+  Constants,
+  Amplitude,
+  Asset,
+  Font,
+} from 'expo';
 import { connect } from 'react-redux';
 import { addNavigationHelpers } from 'react-navigation';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-import AuthTokenActions from '../Flux/AuthTokenActions';
-import LocalStorage from '../Storage/LocalStorage';
 import AppNavigator from './navigation';
+import LocalStorage from '../Storage/LocalStorage';
+import AuthTokenActions from '../Flux/AuthTokenActions';
 
 function cacheImages(images) {
   return images.map((image) => Asset.fromModule(image).downloadAsync());
+}
+
+function getCurrentRouteName(navigationState) {
+  if (navigationState) {
+    const route = navigationState.routes[navigationState.index];
+    if (route.routes) {
+      return getCurrentRouteName(route);
+    }
+    return route.routeName;
+  }
+
+  return null;
 }
 
 @connect((data) => ExpoApp.getDataProps(data))
@@ -69,6 +86,15 @@ class ExpoApp extends React.Component {
     }
   };
 
+  _handleNavigationStateChange = (prevState, currentState) => {
+    const currentScreen = getCurrentRouteName(currentState);
+    const prevScreen = getCurrentRouteName(prevState);
+
+    if (prevScreen !== currentScreen) {
+      Amplitude.logEventWithProperties('Navigation', { currentScreen });
+    }
+  };
+
   render() {
     if (!this.state.isReady) {
       return (
@@ -86,17 +112,17 @@ class ExpoApp extends React.Component {
 
     return (
       <View style={styles.container}>
+        {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
+        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <ActionSheetProvider>
           <AppNavigator
             navigation={addNavigationHelpers({
               dispatch: this.props.dispatch,
               state: this.props.nav,
             })}
+            onNavigationStateChange={this._handleNavigationStateChange}
           />
         </ActionSheetProvider>
-
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
       </View>
     );
   }
@@ -110,11 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   statusBarUnderlay: {
-    height: 24,
+    height: Constants.statusBarHeight,
     backgroundColor: 'rgba(0,0,0,0.2)',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
   },
 });

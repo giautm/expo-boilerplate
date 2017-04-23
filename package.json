@@ -7,12 +7,14 @@
     "appr": "1.0.1",
     "babel-plugin-transform-react-jsx-source": "6.22.0",
     "jest-expo": "^0.4.0",
+    "react-devtools": "2.0.12",
     "react-native-scripts": "0.0.28",
     "react-test-renderer": "16.0.0-alpha.6"
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
     "appr": "appr",
+    "devtools": "react-devtools",
     "start": "react-native-scripts start",
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
@@ -24,6 +26,7 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "0.3.1",
+    "@expo/sentry-utils": "0.4.0",
     "@expo/vector-icons": "4.0.0",
     "apollo-client": "1.0.4",
     "expo": "^16.0.0",
@@ -38,10 +41,12 @@
     "react": "16.0.0-alpha.6",
     "react-apollo": "1.1.0",
     "react-native": "^0.43.4",
+    "react-native-clean-form": "https://github.com/giautm/react-native-clean-form.git",
     "react-navigation": "1.0.0-beta.8",
     "react-redux": "5.0.4",
     "redux": "3.6.0",
     "redux-actions": "2.0.2",
+    "redux-form": "^6.6.3",
     "redux-promise": "0.5.3"
   }
 }
