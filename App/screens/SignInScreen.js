@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form/immutable';
 import {
   ActionsContainer,
@@ -15,17 +16,59 @@ import {
   Select,
   Switch
 } from 'react-native-clean-form/redux-form-immutable';
+import DropdownAlert from 'react-native-dropdownalert';
 
-const onSubmit = (values, dispatch) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      console.log(values.toJS())
-      resolve()
-    }, 1500);
-  });
-};
+import Auth0Api from '../../Api/Auth0Api';
+import AuthTokenActions from '../../Flux/AuthTokenActions';
 
-class FormView extends React.Component {
+class SignInScreen extends React.Component {
+  static getDataProps(data) {
+    return {
+      authTokens: data.authTokens,
+    };
+  };
+
+  _handleSubmit = async (values, dispatch) => {
+    try {
+      let result = await Auth0Api.signInAsync(
+        values.get('username'), values.get('password'));
+      if (this._isMounted) {
+        if (result.error) {
+          this._handleError(result);
+        } else {
+          dispatch(AuthTokenActions.signIn({
+            refreshToken: result.refresh_token,
+            accessToken: result.access_token,
+            idToken: result.id_token,
+          }));
+        }
+      }
+    } catch (e) {
+      this._isMounted && this._handleError(e);
+    }
+  };
+
+  _handleError = (error) => {
+    console.log({ error });
+    const message = error.error_description
+      || error.message
+      || 'Sorry, something went wrong.';
+    this.dropdown.alertWithType('error', 'Error', message);
+  };
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.authTokens.idToken && !this.props.authTokens.idToken) {
+      this.props.navigation.goBack(null);
+    }
+  }
 
   render() {
     const { handleSubmit, submitting } = this.props;
@@ -48,16 +91,22 @@ class FormView extends React.Component {
         <ActionsContainer>
           <Button
             iconPlacement="right"
-            onPress={handleSubmit(onSubmit)}
+            onPress={handleSubmit(this._handleSubmit)}
             submitting={submitting}
-            >Save</Button>
+            >Sign In</Button>
         </ActionsContainer>
+        <DropdownAlert
+          containerStyle={{
+            padding: 0,
+            paddingTop: 0,
+          }}
+          ref={(ref) => this.dropdown = ref}/>
       </Form>
     )
   }
 }
 
-export default reduxForm({
+export default connect((data) => SignInScreen.getDataProps(data))(reduxForm({
   form: 'signInForm',
   validate: (values) => {
     const errors = {};
@@ -71,4 +120,4 @@ export default reduxForm({
 
     return errors;
   },
-})(FormView);
+})(SignInScreen));

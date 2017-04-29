@@ -19,10 +19,8 @@ ExpoSentryClient.setupSentry(
   packageJSON.main,
 );
 
-
 // This has to be first.
-import AppStore from 'AppStore';
-
+import AppStore from '../Flux/Store';
 import ApolloClient from '../Api/ApolloClient';
 import ExpoApp from 'ExpoApp';
 
