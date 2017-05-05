@@ -11,6 +11,7 @@ const AppNavigation = StackNavigator({
     screen: SignInScreen,
     navigationOptions: {
       title: 'Sign in',
+      headerTintColor: '#fff',
     },
   },
 }, {
@@ -19,7 +20,7 @@ const AppNavigation = StackNavigator({
   },
   navigationOptions: {
     headerStyle: {
-      backgroundColor: '#fff',
+      backgroundColor: '#1ba8ff',
     },
   },
   mode: 'modal',

@@ -1,7 +1,7 @@
 /* @flow */
 
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
-import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 import createAuthAwareNetworkInterface from './createAuthAwareNetworkInterface';
 import Auth0Api from './Auth0Api';
 import AuthTokenActions from '../Flux/AuthTokenActions';
@@ -53,43 +53,15 @@ const wsClient = new SubscriptionClient(GRAPHQL_SUBSCRIPTIONS, {
   reconnect: true,
 });
 
-//// Temporary comment out because SubscriptionClient currently
-//// doesn't support middlewares.
-// wsClient.use([
-//   {
-//     applyMiddleware(opts, next) {
-//       const idToken = getIdToken();
-//       if (idToken != null && Auth0Api.tokenIsExpired(idToken)) {
-//         refreshIdTokenAsync().then((newIdToken) => {
-//           setIdToken(newIdToken);
-//           opts.connectionParams = {
-//             authToken: newIdToken,
-//           };
-//           next();
-//         }).catch(next);
-//       } else {
-//         opts.connectionParams = {
-//           authToken: idToken,
-//         };
-//         next();
-//       }
-//     },
-//   },
-// ]);
-
 const networkInterface = createAuthAwareNetworkInterface({
   uri: GRAPHQL_ENDPOINT,
+  wsClient,
   getIdToken,
   setIdToken,
   getRefreshToken,
   idTokenIsValid,
   refreshIdTokenAsync,
 });
-
-const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
-  networkInterface,
-  wsClient
-);
 
 export default new ApolloClient({
   dataIdFromObject: result => {
@@ -100,5 +72,5 @@ export default new ApolloClient({
     // Make sure to return null if this object doesn't have an ID
     return null;
   },
-  networkInterface: networkInterfaceWithSubscriptions,
+  networkInterface,
 });

@@ -1,6 +1,9 @@
 /* @flow */
 
+import { print } from 'graphql/language/printer';
 import { createNetworkInterface } from 'apollo-client';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
+
 import ConnectivityAwareHTTPNetworkInterface
   from './ConnectivityAwareHTTPNetworkInterface';
 
@@ -15,11 +18,15 @@ type AuthAwareNetworkInterfaceOptions = {
 class AuthAwareNetworkInterface {
   _requestQueue = [];
 
-  constructor(uri: string, options: AuthAwareNetworkInterfaceOptions = {}) {
+  _wsClient: SubscriptionClient;
+
+  constructor(uri: string, wsClient: SubscriptionClient, options: AuthAwareNetworkInterfaceOptions = {}) {
     this._networkInterface = new ConnectivityAwareHTTPNetworkInterface(
       uri,
       options
     );
+    this._wsClient = wsClient;
+
     this._getIdToken = options.getIdToken;
     this._setIdToken = options.setIdToken;
     this._getRefreshToken = options.getRefreshToken;
@@ -46,9 +53,37 @@ class AuthAwareNetworkInterface {
         },
       },
     ]);
+
+    // TODO: Remove following lines after
+    // subscriptions-transport-ws support middleware
+    if (this._wsClient.use === undefined) {
+      return;
+    }
+
+    this._wsClient.use([
+      {
+        applyMiddleware: (opts, next) => {
+          const authToken = this._getIdToken();
+          if (this._idTokenIsValid() || !authToken) {
+            opts.connectionParams = {
+              authToken,
+            };
+            next();
+          } else {
+            this._refreshIdTokenAsync().then((newIdToken) => {
+              this._setIdToken(newIdToken);
+              opts.connectionParams = {
+                authToken: newIdToken,
+              };
+              next();
+            }).catch(next);
+          }
+        },
+      },
+    ]);
   };
 
-  query(request) {
+  query(request: any) {
     if (this._idTokenIsValid() || !this._getIdToken()) {
       return this._networkInterface.query(request);
     } else {
@@ -68,6 +103,17 @@ class AuthAwareNetworkInterface {
     }
   }
 
+  subscribe(request: any, handler: any): number {
+    return this._wsClient.subscribe({
+      query: print(request.query),
+      variables: request.variables,
+    }, handler);
+  }
+
+  unsubscribe(id: number): void {
+    this._wsClient.unsubscribe(id);
+  }
+
   _flushRequestQueue() {
     this._requestQueue.forEach(queuedRequest => queuedRequest());
     this._requestQueue = [];
@@ -83,7 +129,7 @@ class AuthAwareNetworkInterface {
 }
 
 export default function createAuthAwareNetworkInterface(options = {}) {
-  let { uri, ...otherOptions } = options;
+  let { uri, wsClient, ...otherOptions } = options;
 
-  return new AuthAwareNetworkInterface(uri, otherOptions);
+  return new AuthAwareNetworkInterface(uri, wsClient, otherOptions);
 }

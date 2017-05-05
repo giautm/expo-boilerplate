@@ -9,7 +9,8 @@
     "jest-expo": "^0.4.0",
     "react-devtools": "2.0.12",
     "react-native-scripts": "0.0.28",
-    "react-test-renderer": "16.0.0-alpha.6"
+    "react-test-renderer": "16.0.0-alpha.6",
+    "rimraf": "2.6.1"
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
@@ -19,7 +20,8 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js --watch"
+    "test": "node node_modules/jest/bin/jest.js --watch",
+    "postinstall": "rimraf ./node_modules/redux-form/node_modules/react"
   },
   "jest": {
     "preset": "jest-expo"
@@ -31,6 +33,7 @@
     "apollo-client": "1.0.4",
     "expo": "^16.0.0",
     "fbemitter": "2.1.1",
+    "graphql": "0.9.6",
     "graphql-tag": "2.0.0",
     "immutable": "3.8.1",
     "jwt-decode": "2.2.0",

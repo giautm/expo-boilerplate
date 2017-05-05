@@ -41,6 +41,9 @@ class SignInScreen extends React.Component {
             accessToken: result.access_token,
             idToken: result.id_token,
           }));
+          if (this._isMounted) {
+            this.props.navigation.goBack(null);
+          }
         }
       }
     } catch (e) {
